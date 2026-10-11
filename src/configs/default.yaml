@@ -1,0 +1,166 @@
+seed: 42
+
+horizon:
+  T: 24
+  L: 24
+  dt: 1.0
+
+data:
+  n_scenarios: 2800
+  split: [2000, 300, 500]
+  pv_capacity: 500.0
+  wt_capacity: 600.0
+  base_load_e: 550.0
+  base_load_h: 700.0
+  base_load_c: 200.0
+  base_load_g: 150.0
+  load_noise: 0.10
+  wind_ar: 0.7
+  wind_noise: 0.18
+  pv_noise: 0.12
+  price_buy_peak: 1.40
+  price_buy_off: 0.60
+  price_sell_ratio: 0.45
+  price_gas_off: 0.20
+  price_gas_peak: 0.40
+  carbon_grid_base: 0.30
+  carbon_grid_swing: 0.12
+  carbon_gas: 0.50
+
+system:
+  grid:
+    p_max_import: 1200.0
+    p_max_export: 800.0
+    ramp: 1200.0
+  chp:
+    p_max: 350.0
+    p_min: 0.0
+    eta_e: 0.35
+    eta_h: 0.45
+    ramp: 175.0
+  gt:
+    p_max: 400.0
+    p_min: 0.0
+    eta_e: 0.33
+    ramp: 400.0
+  gb:
+    p_max: 500.0
+    p_min: 0.0
+    eta_h: 0.90
+    ramp: 500.0
+  eb:
+    p_max: 300.0
+    p_min: 0.0
+    eta_h: 0.98
+    ramp: 300.0
+  hp:
+    p_max: 250.0
+    p_min: 0.0
+    cop: 2.7
+    ramp: 250.0
+  ch:
+    p_max: 300.0
+    p_min: 0.0
+    cop: 4.0
+    ramp: 300.0
+  battery:
+    soc_min: 50.0
+    soc_max: 1000.0
+    soc_init: 300.0
+    p_max: 300.0
+    eta_chg: 0.95
+    eta_dis: 0.95
+    self_discharge: 0.001
+    degr_cost: 0.05
+  gastank:
+    soc_min: 20.0
+    soc_max: 500.0
+    soc_init: 150.0
+    p_max: 200.0
+    eta_chg: 0.98
+    eta_dis: 0.98
+    self_discharge: 0.0005
+
+uc:
+  min_load_frac: 0.30
+  start_cost: 20.0
+  min_up: 3
+  min_down: 2
+  action_dim: 9
+  binary_loss_weight: 0.1
+  commitment_logit_scale: 5.0
+
+model:
+  d_model: 256
+  n_enc_blocks: 4
+  n_heads: 8
+  n_pref_tokens: 2
+  n_channels: 12
+  unet_base: 128
+  unet_stages: 3
+  K_train: 1000
+  K_infer: 10
+  beta_schedule: cosine
+  cfg_w: 0.0
+  p_uncond: 0.0
+  phys_beta: 0.0
+  a0_margin: 0.8
+
+full_diffusion:
+  architecture_version: 3
+  uc_hybrid: true
+  commitment_head: true
+  commitment_projection: true
+  p_uncond: 0.0
+  x0_weight: 1.0
+  min_snr_gamma: 0.0
+  commitment_weight: 1.0
+  commitment_sequence_weight: 0.0
+  commitment_event_weight: 0.0
+  commitment_teacher_forcing: 0.5
+  preference_jitter: 0.0
+  anchor_weight: 1.0
+  anchor_context: false
+  objective_weight: 0.0
+  preference_objective_weight: 0.0
+  pre_recourse_weight: 0.0
+  projection_weight: 0.0
+  anchor_pretrain_epochs: 0
+  joint_finetune_epoch: 0
+
+train:
+  epochs: 600
+  batch_size: 256
+  lr: 2.0e-4
+  weight_decay: 1.0e-5
+  ema_decay: 0.999
+  ema_update_after_step: 500
+  ema_update_every: 1
+  warmup_steps: 500
+  lr_schedule: cosine
+  min_lr: 1.0e-5
+  validation_seed: 12345
+  pareto_validation_every: 5
+  pareto_validation_scenarios: 64
+  pareto_validation_samples: 2
+  pareto_validation_steps: 20
+  grad_clip: 1.0
+  num_workers: 4
+
+milp:
+  lambda_grid: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  oracle_grid_n: 21
+  msg: false
+  time_limit: 30
+  feasibility_tol: 1.0e-3
+
+eval:
+  K_lambda: 100
+  M_samples: 1
+
+smoke:
+  data: {n_scenarios: 24, split: [16, 3, 5]}
+  model: {d_model: 64, n_enc_blocks: 2, unet_base: 32, K_infer: 10}
+  train: {epochs: 3, batch_size: 32, ema_update_after_step: 0, ema_update_every: 1, warmup_steps: 2, num_workers: 0}
+  milp: {lambda_grid: [0.0, 0.5, 1.0], oracle_grid_n: 5}
+  eval: {K_lambda: 5, M_samples: 1}

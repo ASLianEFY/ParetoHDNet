@@ -1,0 +1,43 @@
+{
+  "arrays": {
+    "a0": [
+      22000,
+      24,
+      9
+    ],
+    "f1": [
+      22000
+    ],
+    "f2": [
+      22000
+    ],
+    "lam": [
+      22000
+    ],
+    "state": [
+      22000,
+      24,
+      12
+    ]
+  },
+  "artifact_type": "demonstrations",
+  "config_fingerprint": "3b63c851ccd226359bc7627a7a0d130dcbab3cce92b63006f7534d96da54b9f0",
+  "data_config_fingerprint": "3aed8a89fcd9b58b7c8f5ea396d5a9562342f3bf41660b29baffcf3c5dfc853a",
+  "feasibility_tolerance": 0.001,
+  "provenance": {
+    "command": "/home/jlcv/IESmodel/src/scripts/gen_data.py --uc-milp",
+    "config_fingerprint": "3b63c851ccd226359bc7627a7a0d130dcbab3cce92b63006f7534d96da54b9f0",
+    "created_at": "2026-07-13T02:02:32.903056+00:00",
+    "git": {
+      "available": true,
+      "commit": "6d886ddf88585e97318c136f8b0f5365e95aff2d",
+      "dirty": true
+    },
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+    "python": "3.11.15",
+    "schema_version": 1
+  },
+  "samples": 22000,
+  "schema_version": 1,
+  "split": "train"
+}

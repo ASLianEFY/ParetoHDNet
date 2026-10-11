@@ -1,0 +1,45 @@
+{
+  "best_epoch": 85,
+  "best_val_loss": 0.047215130428473154,
+  "config_fingerprint": "8b20b0ae0f6a327b2b9f09f0b282922b496001df04548834741eca438f21759b",
+  "preferred_weights": "model",
+  "provenance": {
+    "command": "/home/jlcv/IES/src/train_journal_baseline.py --kind diffusion --seed 44 --epochs 100 --resume",
+    "config_fingerprint": "8b20b0ae0f6a327b2b9f09f0b282922b496001df04548834741eca438f21759b",
+    "created_at": "2026-09-30T10:53:23.057037+00:00",
+    "git": {
+      "available": false
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.11.15",
+    "schema_version": 1
+  },
+  "schema_version": 2,
+  "training": {
+    "best_validation": {
+      "epoch": 85,
+      "feas": 0.9488636363636365,
+      "hv": 0.8275535036485783,
+      "igd": 0.04201480267784598
+    },
+    "data_seed": 42,
+    "device": "NVIDIA GeForce RTX 5090 D",
+    "epochs": 100,
+    "feasibility_protocol": "strict_carrier_balance_v2",
+    "kind": "diffusion",
+    "micro_batch_size": 128,
+    "model_type": "diffusion",
+    "normalizer": "train_only",
+    "optimizer": "AdamW warmup500 cosine",
+    "parameters": 28221329,
+    "selection": "highest_fixed_strict_validation_hv_then_lowest_igd",
+    "torch": "2.12.1+cu130",
+    "training_seed": 44,
+    "validation_every": 5,
+    "validation_reference": "11-weight training-validation demonstrations",
+    "validation_samples": 2,
+    "validation_scenarios": 64,
+    "validation_steps": 20,
+    "width": null
+  }
+}
