@@ -1,4 +1,4 @@
-"""PGDNet loading and strict synthetic candidate-set evaluation."""
+"""ParetoHDNet loading and strict synthetic candidate-set evaluation."""
 import copy
 import hashlib
 import json
@@ -14,15 +14,15 @@ from src.evaluate import aggregate, aggregate_coverage, json_safe, method_metric
 from src.ies.batch_decode import decode_batch
 from src.ies.independent_audit import PROTOCOL, audit_dispatch, objective_values
 from src.utils import RESULTS_DIR, set_seed
-DEFAULT_OUTPUT = RESULTS_DIR / 'pgdnet'
+DEFAULT_OUTPUT = RESULTS_DIR / 'paretohdnet'
 
 def load_policy(kind, checkpoint=None, strategy=None, device='cuda'):
-    if kind != 'diffusion':
-        raise ValueError('This package contains PGDNet only.')
-    from src.models.diffusion import DiffusionDecoder
+    if kind != 'paretohdnet':
+        raise ValueError('This package contains ParetoHDNet only.')
+    from src.models.paretohdnet import ParetoHDNet
     saved = torch.load(checkpoint, map_location='cpu', weights_only=False)
     cfg = copy.deepcopy(saved['cfg'])
-    policy = DiffusionDecoder(cfg).to(device)
+    policy = ParetoHDNet(cfg).to(device)
     policy.load_state_dict(saved[checkpoint_weight_key(saved)])
     policy.eval()
     return policy, StateNormalizer.load(saved['normalizer']), cfg, saved.get('metadata', {})

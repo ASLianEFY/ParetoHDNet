@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parent
-KINDS = ('diffusion',)
+KINDS = ('paretohdnet',)
 
 
 def dataset(family):
@@ -28,7 +28,7 @@ def dataset(family):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('command', choices=('train', 'validate', 'evaluate', 'verify', 'smoke-train'))
-    p.add_argument('--kind', choices=KINDS, default='diffusion')
+    p.add_argument('--kind', choices=KINDS, default='paretohdnet')
     p.add_argument('--seed', type=int, choices=(44,), default=44)
     p.add_argument('--checkpoint', type=Path, help='Use a newly trained checkpoint instead of the supplied selected weights')
     p.add_argument('--device', choices=('cpu', 'cuda'), default='cuda')
@@ -60,11 +60,11 @@ def main():
                 raise ValueError(f'Checksum mismatch: {name}')
             count += 1
         from src.inference import load_policy
-        model, normalizer, cfg, metadata = load_policy('diffusion', ROOT / 'checkpoints/diffusion_seed44.pt', device='cpu')
+        model, normalizer, cfg, metadata = load_policy('paretohdnet', ROOT / 'checkpoints/paretohdnet_seed44.pt', device='cpu')
         assert metadata['training']['training_seed'] == 44
         assert metadata['best_epoch'] == 85
         print(json.dumps({'status': 'passed', 'files_verified': count,
-                          'model': 'PGDNet', 'seed': 44, 'selected_epoch': 85}, indent=2))
+                          'model': 'ParetoHDNet', 'seed': 44, 'selected_epoch': 85}, indent=2))
         return
     if args.device == 'cuda' and not torch.cuda.is_available():
         p.error('CUDA is unavailable; use --device cpu (joint LP entry point requires CUDA)')
@@ -115,7 +115,7 @@ def main():
             model.train()
             optimizer = torch.optim.AdamW(model.parameters(), lr=cfg['train']['lr'])
             optimizer.zero_grad(set_to_none=True)
-            loss = (model.loss(state, raw, lam, action) if args.kind == 'diffusion'
+            loss = (model.loss(state, raw, lam, action) if args.kind == 'paretohdnet'
                     else model.loss(state, lam, action))[0]
             assert torch.isfinite(loss), 'non-finite training loss'
             loss.backward()

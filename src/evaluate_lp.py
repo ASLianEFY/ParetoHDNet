@@ -1,4 +1,4 @@
-"""Optional continuous LP evaluation of PGDNet candidate sets."""
+"""Optional continuous LP evaluation of ParetoHDNet candidate sets."""
 import hashlib
 import json
 import time
@@ -11,7 +11,7 @@ from src.ies.independent_audit import PROTOCOL, audit_dispatch, objective_values
 from src.ies.joint_recourse_storage import PROTOCOL as LP_PROTOCOL, project_joint_balance
 from src.inference import atomic_json, file_digest, load_policy
 from src.utils import RESULTS_DIR, set_seed
-OUTPUT = RESULTS_DIR / 'pgdnet_lp'
+OUTPUT = RESULTS_DIR / 'paretohdnet_lp'
 
 def score(values, on, scenario, cfg, ideal, span, reference):
     violations = audit_dispatch(values, on, scenario, cfg)
@@ -35,7 +35,7 @@ def evaluate_one(model_row, family, data):
         'apply_recourse': True, 'milp_repair': False, 'evaluation_seed': '42+scenario_index',
         'source_sha256': {name: file_digest(Path(__file__).parent / name) for name in
             ('evaluate_lp.py', 'ies/joint_recourse_storage.py', 'ies/batch_decode.py', 'ies/independent_audit.py',
-             'ies/system.py', 'models/diffusion.py')}}
+             'ies/system.py', 'models/paretohdnet.py')}}
     protocols, targets = {}, {}
     directory = OUTPUT / 'evaluations' / family
     for variant in ('base', 'joint_lp'):

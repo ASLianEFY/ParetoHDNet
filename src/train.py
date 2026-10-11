@@ -22,11 +22,11 @@ from src.evaluate import method_metrics, normalize, scenario_bounds
 from src.ies.batch_decode import decode_batch
 from src.ies.independent_audit import PROTOCOL, audit_dispatch, objective_values
 from src.inference import DEFAULT_OUTPUT, atomic_json
-from src.models.diffusion import DiffusionDecoder
+from src.models.paretohdnet import ParetoHDNet
 from src.training_utils import _scheduled_lr, _rng_state, _restore_rng_state, _atomic_torch_save
 from src.utils import CACHE_DIR, load_config, set_seed
 
-MODELS = {'diffusion': DiffusionDecoder}
+MODELS = {'paretohdnet': ParetoHDNet}
 
 
 @torch.no_grad()
@@ -133,7 +133,7 @@ def main():
             for i in range(0, size, args.micro_batch_size):
                 j = min(i + args.micro_batch_size, size)
                 tensors = [x[i:j].to(args.device) for x in (state, lam, action, raw)]
-                if args.kind == 'diffusion':
+                if args.kind == 'paretohdnet':
                     loss = model.loss(tensors[0], tensors[3], tensors[1], tensors[2])[0]
                 else:
                     loss = model.loss(*tensors[:3])[0]
@@ -149,7 +149,7 @@ def main():
             for batch in loaders['val']:
                 for i in range(0, len(batch[0]), args.micro_batch_size):
                     state, lam, action, raw = [x[i:i + args.micro_batch_size].to(args.device) for x in batch[:4]]
-                    loss = model.validation_loss(state, raw, lam, action)[0] if args.kind == 'diffusion' else model.loss(state, lam, action)[0]
+                    loss = model.validation_loss(state, raw, lam, action)[0] if args.kind == 'paretohdnet' else model.loss(state, lam, action)[0]
                     validation.append((float(loss), len(state)))
         row = {'epoch': epoch + 1, 'loss': sum(v*n for v,n in losses)/sum(n for _,n in losses),
                'val_loss': sum(v*n for v,n in validation)/sum(n for _,n in validation), 'seconds': time.perf_counter()-started}

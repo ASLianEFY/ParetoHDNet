@@ -13,7 +13,7 @@ def cosine_alpha_bar(K, s=0.008):
     abar = f / f[0]
     return abar[1:].clamp_min(1e-05).float()
 
-class DiffusionDecoder(nn.Module):
+class ParetoHDNet(nn.Module):
 
     def __init__(self, cfg: dict, action_dim: int | None=None):
         super().__init__()
